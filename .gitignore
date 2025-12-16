@@ -1,4 +1,6 @@
 __pycache__/
 data/
+logs/
 *.pth
 .DS_Store
+data.zip
