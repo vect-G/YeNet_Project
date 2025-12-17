@@ -12,7 +12,8 @@ from torch.cuda.amp import autocast, GradScaler # 🔥 引入 AMP 核心组件
 
 # --- 引入你的积木 ---
 from dataset import CUBDataset
-from model_pro import YeResNet  # 确保 model_pro.py 是之前那个 SE 版
+# from model_pro import YeResNet 
+from model_ultra import YeDenseNet # <--- 改成这个
 
 # --- Mixup 核心函数 ---
 def mixup_data(x, y, alpha=1.0, use_cuda=True):
@@ -39,7 +40,7 @@ def get_args():
     parser = argparse.ArgumentParser(description='YeResNet Training Script')
     parser.add_argument('--checkpoint', type=str, default=None, 
                         help='Path to checkpoint to resume from')
-    parser.add_argument('--batch_size', type=int, default=32, help='Batch size')
+    parser.add_argument('--batch_size', type=int, default=64, help='Batch size')
     parser.add_argument('--epochs', type=int, default=1000, help='Number of epochs')
     parser.add_argument('--lr', type=float, default=0.001, help='Initial learning rate')
     parser.add_argument('--alpha', type=float, default=1.0, help='Mixup alpha value')
@@ -60,7 +61,7 @@ def main():
     log_dir = os.path.join('./logs', start_time)
     os.makedirs(log_dir, exist_ok=True)
     
-    log_file_path = os.path.join(log_dir, 'train_log.txt')
+    log_file_path = os.path.join(log_dir, 'train_densenet_log.txt')
     with open(log_file_path, 'w') as f:
         f.write("Epoch,Train_Loss,Val_Loss,Val_Acc,Learning_Rate\n")
 
@@ -103,8 +104,9 @@ def main():
     val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False, 
                             num_workers=NUM_WORKERS, pin_memory=True)
 
-    # --- 模型初始化 ---
-    model = YeResNet(num_classes=200).to(device)
+    print("🏗️ 正在构建 YeDenseNet (Ultra Mode)...")
+    # 这里不需要改参数，默认就是 DenseNet121 的配置
+    model = YeDenseNet(num_classes=200).to(device)
 
     if args.checkpoint and os.path.exists(args.checkpoint):
         print(f"♻️ [续训] 加载存档: {args.checkpoint}")
