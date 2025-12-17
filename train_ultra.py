@@ -84,7 +84,7 @@ def mixup_criterion(criterion, pred, y_a, y_b, lam):
 def get_args():
     parser = argparse.ArgumentParser(description='YeDenseNet Ultra Training')
     parser.add_argument('--checkpoint', type=str, default=None, help='Resume from checkpoint')
-    parser.add_argument('--batch_size', type=int, default=32, help='Batch size (Decrease if OOM)')
+    parser.add_argument('--batch_size', type=int, default=64, help='Batch size (Decrease if OOM)')
     parser.add_argument('--epochs', type=int, default=1000, help='Total epochs (Cosine needs more time)')
     parser.add_argument('--lr', type=float, default=0.001, help='Initial learning rate')
     return parser.parse_args()
